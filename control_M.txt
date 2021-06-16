@@ -1,0 +1,49 @@
+Sub find_time()
+    'online= 上班,offline=下班
+    Dim online, offline As Date
+    Dim e, is_work_time As Boolean
+    Dim first_empty_cell_index, index As Integer
+        
+    online = TimeValue("7:00")
+    offline = TimeValue("15:00")
+'Debug.Print (TimeValue(Cells(2, 5).Value))
+
+
+    'cells(y,x)
+    Dim Y As Integer
+    Y = 1
+    e = IsEmpty(Cells(Y, 5))
+
+    'cell is not empty
+    Do While e <> True
+        Y = Y + 1
+'    Debug.Print (Y)
+    e = IsEmpty(Cells(Y, 5))
+    'Debug.Print (e)
+    'Exit Do
+    first_empty_cell_index = Y
+    Loop
+'Debug.Print ("first_empty_cell_index = " & first_empty_cell_index)
+
+For index = 2 To first_empty_cell_index - 1
+'Debug.Print (index & "," & Cells(index, 5).Value)
+    is_work_time = TimeValue(Cells(index, 5).Value) > online And TimeValue(Cells(index, 5).Value) < offline
+    If is_work_time Then
+   '符合上班時間日程
+   ' Debug.Print (index & "," & Cells(index, 5).Value)
+     Cells(index, 5).Select
+     
+    With Selection.Interior
+        .Pattern = xlSolid
+        .PatternColorIndex = xlAutomatic
+        .Color = 49407
+        .TintAndShade = 0
+        .PatternTintAndShade = 0
+    End With
+   
+    End If
+    
+Next index
+
+End Sub
+

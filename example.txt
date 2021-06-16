@@ -1,0 +1,82 @@
+'需要在module裡面
+Sub 刪除規則（）
+	'刪除c行規則
+	Columns("C:C").Select 
+	 
+	 Selection.FormatConditions.Delete 
+ End Sub 
+	 
+	 
+ Sub 儲存（）
+	
+	ActiveWorkbook.Save
+End Sub
+
+Sub 排序()
+' 排序
+
+    '依照c1欄位排序
+    ActiveWorkbook.Worksheets("工作表1").AutoFilter.Sort.SortFields.Add Key:=Range( _
+        "C1"), SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:= _
+        xlSortNormal
+    With ActiveWorkbook.Worksheets("工作表1").AutoFilter.Sort
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+End Sub
+
+Sub 多重排序()
+'
+' 巨集2 巨集
+'
+
+'
+'
+Rows(1).Select
+
+    Selection.AutoFilter
+
+    Selection.AutoFilter
+    ActiveWorkbook.Worksheets("工作表1").Sort.SortFields.Clear
+	'以c欄為主
+    ActiveWorkbook.Worksheets("工作表1").Sort.SortFields.Add Key:=Range("C2:C63"), _
+        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+	'D欄為輔
+    ActiveWorkbook.Worksheets("工作表1").Sort.SortFields.Add Key:=Range("D2:D63"), _
+        SortOn:=xlSortOnValues, Order:=xlAscending, DataOption:=xlSortNormal
+    With ActiveWorkbook.Worksheets("工作表1").Sort
+        .SetRange Range("A1:I63")
+		'有標題
+        .Header = xlYes
+        .MatchCase = False
+        .Orientation = xlTopToBottom
+        .SortMethod = xlPinYin
+        .Apply
+    End With
+End Sub
+
+Sub 篩選2()
+
+'HG(手槍)
+'AR(突擊步槍)
+'MG(機槍)
+'SMG(衝鋒槍)
+
+    ActiveSheet.Range("$A$1:$I$65").AutoFilter Field:=3, Criteria1:="AR(突擊步槍)"
+    ActiveSheet.Range("$A$1:$I$65").AutoFilter Field:=4, Criteria1:="4~*"
+End Sub
+
+Sub 取消篩選()
+
+	'取消篩選
+	Rows("1:1").Select
+	Selection.AutoFilter
+
+	End Sub
+	
+	sub excel_ ver()
+	
+	End sub

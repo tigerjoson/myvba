@@ -1,0 +1,9 @@
+Sub check_variable()
+ Debug.Print ("The number of the sheets is: " & Sheets.Count)
+ Debug.Print ("ActiveWorkbook.Name :" & ActiveWorkbook.Name)
+ Debug.Print ("The name of the active window is: " & ActiveWindow.Caption)
+ Debug.Print ("The name of the active sheet is " & ActiveSheet.Name)
+ Debug.Print ("Row index :" & ActiveCell.Row)
+ Debug.Print ("column index" & ActiveCell.Column)
+
+End Sub

@@ -1,0 +1,30 @@
+Sub mydate()
+'
+' 巨集1 巨集
+'
+Dim n As Date
+Dim ROC_year As Integer
+' MM =month
+Dim MM  As Integer
+n = Now()
+Dim format_day As String
+
+If Day(n) < 10 Then
+format_day = 0 & Day(n)
+Else
+format_day = Day(n)
+End If
+
+ROC_year = Year(n) - 1911
+
+MM = Month(n)
+'Debug.Print (n)
+' 民國
+'Debug.Print (ROC_year)
+
+'Debug.Print (MM)
+Debug.Print (ROC_year & MM & format_day)
+
+
+End Sub
+

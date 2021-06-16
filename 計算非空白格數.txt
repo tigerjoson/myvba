@@ -1,0 +1,8 @@
+
+Sub 計算非空白格數()
+
+ 'J欄位前面第4欄(C欄)，並使用COUNTA()函數 ，在J3顯示結果
+    Range("J2").Select
+    ActiveCell.FormulaR1C1 = "=COUNTA(C[-4])"
+    Range("J3").Select
+End Sub

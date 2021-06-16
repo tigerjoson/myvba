@@ -1,0 +1,18 @@
+Sub 刪除整張規則()
+'
+' 巨集1 巨集
+'
+
+'
+    Cells.Select
+    Cells.FormatConditions.Delete
+End Sub
+
+
+Sub 全選()
+
+
+    Cells.Select
+End Sub
+
+

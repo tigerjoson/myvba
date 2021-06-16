@@ -1,0 +1,30 @@
+Sub find_name()
+'您可以使用 FindNext 及 FindPrevious 方法，重複進行搜尋。
+'當搜尋到達所指定搜尋範圍的結尾時，它會折回至範圍的開始。
+'若要在發生折回時停止搜尋，請儲存第一個找到之儲存格的地址，
+'然後測試每個後續找到的儲存格位址是否與這個儲存的地址相等。
+'所以可能會無限LOOP
+    Dim cr As Range
+    Dim firstAddress As String
+	Dim Secondvalue as string
+       
+   'AI 為當月班表之index
+    Dim AI   As Integer
+    AI = Sheets.count - 1
+    
+    With Worksheets(AI).Range("A1:A60")
+        Set cr = .Find("yes", LookIn:=xlValues)
+         If cr Is Nothing Then
+         Debug.Print ("條件不存在")
+         Else
+            firstAddress = cr.Address
+            Do  
+              Debug.Print (cr)
+              Set cr = .FindNext(cr)
+              Debug.Print (cr)
+              Debug.Print (cr.Address)
+           Loop  
+         End If
+     End With
+    
+End Sub

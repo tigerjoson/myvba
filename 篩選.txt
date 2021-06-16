@@ -1,0 +1,46 @@
+Sub 取消篩選()
+
+	'取消篩選
+	Rows("1:1").Select
+	Selection.AutoFilter
+
+	End Sub
+	
+Sub Sub刪掉第一列()
+'刪掉第一列
+ActiveWindow.SmallScroll Down:=-6
+Rows("1:1 ").Select
+Selection.Delete
+End Sub
+Sub simple()
+'巨集1巨集
+Rows("1:1").Select
+Selection.Delete Shift:=x1Up
+Columns("A:B").Select
+Selection.Delete Shift:=x1ToLeft
+Columns("B: I").Select
+Selection.Delete Shift:=x1ToLeft
+Columns("A:A").Select
+ActiveSheet.Range("$A$1:$A$703").RemoveDuplicates Columns:=1, Header:=x1Yes
+End Sub
+
+
+Sub 篩選()
+'
+' 巨集1 巨集
+
+    Selection.AutoFilter
+	'選3* 
+    ActiveSheet.Range("$A$1:$I$63").AutoFilter Field:=4, Criteria1:="3~*"
+End Sub
+
+Sub 篩選2()
+
+'HG(手槍)
+'AR(突擊步槍)
+'MG(機槍)
+'SMG(衝鋒槍)
+
+    ActiveSheet.Range("$A$1:$I$65").AutoFilter Field:=3, Criteria1:="AR(突擊步槍)"
+    ActiveSheet.Range("$A$1:$I$65").AutoFilter Field:=4, Criteria1:="4~*"
+End Sub

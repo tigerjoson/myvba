@@ -1,0 +1,10 @@
+Sub 複製資料表副本()
+'
+'
+    Sheets("監控班表_110年2月").Select
+    Sheets("監控班表_110年2月").Copy
+ "儲存檔案路徑
+	ChDir "C:\Users\tiger\Desktop"
+    ActiveWorkbook.SaveAs Filename:="C:\Users\tiger\Desktop\data.xlsx", _
+        FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
+End Sub

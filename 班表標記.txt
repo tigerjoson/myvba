@@ -1,0 +1,43 @@
+Sub 標記名字()
+'
+' 巨集1 巨集
+'
+    Cells.Select
+    Range("K1").Activate
+    ActiveWindow.ScrollColumn = 10
+    ActiveWindow.ScrollColumn = 9
+    ActiveWindow.ScrollColumn = 8
+    ActiveWindow.ScrollColumn = 7
+    ActiveWindow.ScrollColumn = 6
+    ActiveWindow.ScrollColumn = 5
+    ActiveWindow.ScrollColumn = 4
+    ActiveWindow.ScrollColumn = 3
+    ActiveWindow.ScrollColumn = 2
+    ActiveWindow.ScrollColumn = 1
+    Selection.FormatConditions.Add Type:=xlCellValue, Operator:=xlEqual, _
+        Formula1:="=$A$16"
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .Color = 49407
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+End Sub
+
+
+Sub 標記今天日期()
+'
+' 巨集2 巨集
+'
+    Range("1:1").Select
+    Selection.FormatConditions.Add Type:=xlTimePeriod, DateOperator:=xlToday
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1).Interior
+        .PatternColorIndex = xlAutomatic
+        .ThemeColor = xlThemeColorAccent2
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).StopIfTrue = False
+    ActiveWorkbook.Save
+End Sub

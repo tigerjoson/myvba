@@ -1,0 +1,35 @@
+Sub 找到當月工作表()
+'
+' 新增工作表並取得工作表名單 巨集
+'
+Dim cr As Range
+'flag 比對
+Dim flag As Boolean
+'當月活頁簿名稱
+Dim mysheetname As String
+Dim n As Date
+Dim ROC_year As Integer
+' MM =month
+Dim MM  As Integer
+n = Now()
+ROC_year = Year(n) - 1911
+MM = Month(n)
+'Debug.Print (n)
+' 民國
+'Debug.Print (ROC_year)
+
+'Debug.Print (MM)
+mysheetname = "監控班表_" & ROC_year & "年" & MM & "月"
+
+ Sheets(mysheetname).Select
+'the index
+ Debug.Print(Sheets(mysheetname).Index )
+
+'For i = 1 To Sheets.count
+'If (Sheets(i).Name = mysheetname) Then
+'Debug.Print (mysheetname)
+'Debug.Print (i)
+'End If
+
+ 'Next i
+End Sub

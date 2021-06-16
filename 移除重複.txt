@@ -1,0 +1,42 @@
+Sub renew_data()
+'移除重複
+Columns("A:A").Select
+Selection.Copy
+Columns("B:B").Select
+Selection.Insert Shift:=x1ToRight
+Application.CutCopyMode = False
+'指定某一格
+ActiveCell.FormulaR1C1 = "移除重複"
+Range("P2").Select
+
+ActiveSheet.Range("B:B").RemoveDuplicates Columns:=1, Header=xlYes
+
+Range("B2:B300").Select
+Selection.Copy
+Range("C2:C300").Select
+Selection.PasteSpecial Paste:=x1PasteValues, Operation:=x1None, SkipBlanks:=False, Transpose:=False
+End Sub
+Sub 指定特定值()
+ActiveCell.FormulaR1C1 = "1"
+Range("P2").Select
+End Sub
+
+Sub 複製並移除重複()
+'
+'  複製並移除重複 巨集
+'
+
+'複製
+    Columns("C:C").Select
+    Selection.Copy
+'貼上另一欄
+    Columns("D:D").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+'僅貼值
+    Application.CutCopyMode = False
+ 
+' 移除重複
+	ActiveSheet.Range("$G$1:$G$658").RemoveDuplicates Columns:=1, Header:=xlNo
+End Sub
+

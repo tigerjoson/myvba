@@ -1,0 +1,14 @@
+Sub 新增工作表並取得工作表名單()
+'
+' 新增工作表並取得工作表名單 巨集
+'
+
+'
+    Sheets.Add After:=ActiveSheet
+   Sheets(Sheets.Count).Name = "工作表名單"
+   ReDim sheet_name(Sheets.Count) As String
+For i = 1 To Sheets.Count
+sheet_name(i) = Sheets(i).Name
+  Cells(i, 1) = sheet_name(i)
+Next i
+End Sub

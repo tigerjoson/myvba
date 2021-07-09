@@ -1,0 +1,88 @@
+Sub 巨集1()
+'
+' 巨集1 巨集
+'
+
+'
+    Dim row_index As String
+    
+    row_index = ActiveCell.Row
+    
+    
+    Selection.Copy
+    Cells(row_index, 3).Select
+    
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+End Sub
+
+Sub find_name()
+'您可以使用 FindNext 及 FindPrevious 方法，重複進行搜尋。
+'當搜尋到達所指定搜尋範圍的結尾時，它會折回至範圍的開始。
+'若要在發生折回時停止搜尋，請儲存第一個找到之儲存格的地址，然後測試每個後續找到的儲存格位址是否與這個儲存的地址相等。
+'所以可能會無限LOOP
+Workbooks("hb16264_ATM_待整理.xlsx").Activate
+Debug.Print ("ActiveWorkbook.Name :" & ActiveWorkbook.Name)
+    Dim cr As Range
+    Dim firstAddress As String
+    '符合條件的個數
+    Dim count As Integer
+    
+   'AI 為當月班表之index
+    Dim AI   As Integer
+        AI = Sheets.count - 2
+    
+    With ActiveSheet.Range("B:B")
+        'find rule
+        Set cr = .Find("10.88", LookIn:=xlValues)
+         If cr Is Nothing Then
+         Debug.Print ("條件不存在")
+         Else
+            firstAddress = cr.Address
+
+            Do
+              Debug.Print ("cr=" & cr)
+              Debug.Print (cr.Address)
+            '  Debug.Print ("first_match = " & Range(firstAddress))
+            ' Debug.Print ("firstAddress =" & firstAddress)
+             Set cr = .FindNext(cr)
+             ' Debug.Print (cr)
+              'Debug.Print (cr.Address)
+'相對參照格式
+'Debug.Print (cr.Address(RowAbsolute:=False, ColumnAbsolute:=False))
+             
+                If cr = Range(firstAddress) Then
+                Exit Do
+                End If
+                
+                
+            Loop
+          End If
+     End With
+    
+End Sub
+
+Sub check_variable()
+ Debug.Print ("The number of the sheets is: " & Sheets.count)
+ Debug.Print ("ActiveWorkbook.Name :" & ActiveWorkbook.Name)
+ Debug.Print ("The name of the active window is: " & ActiveWindow.Caption)
+ Debug.Print ("The name of the active sheet is " & ActiveSheet.Name)
+ Debug.Print ("Row index :" & ActiveCell.Row)
+ Debug.Print ("column index" & ActiveCell.Column)
+ Debug.Print ("selection" & Selection)
+ Debug.Print ("The selection object type is: " & TypeName(Selection))
+Debug.Print (IsEmpty(Range("A1").Value))
+Debug.Print ("index=" & Index)
+    
+End Sub
+
+
+Sub RemoveDuplicate()
+'
+' 巨集2 巨集
+'
+
+Workbooks("list.xlsx").Activate
+
+    ActiveSheet.Range("$A$1:$A$478").RemoveDuplicates Columns:=1, Header:=xlNo
+End Sub

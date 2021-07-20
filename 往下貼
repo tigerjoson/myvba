@@ -1,0 +1,20 @@
+Sub 往下貼()
+'
+' 巨集1 巨集
+'
+
+'
+    Dim row_index As Integer
+    Dim column_index As Integer
+    
+    
+    row_index = ActiveCell.Row + 1
+    column_index = ActiveCell.Column
+    
+    Selection.Copy
+    Cells(row_index, column_index).Select
+    
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+End Sub
+

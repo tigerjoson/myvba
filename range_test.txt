@@ -1,0 +1,15 @@
+' ref : https://stackoverflow.com/questions/49900630/excel-vba-loop-through-column-and-insert-rows-based-on-cell-value
+
+Sub Create_new_rows()
+
+Dim rng As Range, r As Long
+
+Set rng = Range("C8:C3276")
+
+For r = rng.Count To 1 Step -1
+    If rng(r).Value = "Total" Then
+        rng(r + 1).EntireRow.Insert
+    End If
+Next r
+
+End Sub

@@ -1,0 +1,12 @@
+Sub test_collection()
+Dim x As New Collection
+ Range("H1").Select
+ ActiveCell.FormulaR1C1 = "=COUNTA(C[-7])"
+ Dim f As Integer
+ f = ActiveCell.Value
+ For i = 1 To f
+        tiem
+        x.Add Item:=Cells(i, 1).Value
+ Next i
+
+End Sub

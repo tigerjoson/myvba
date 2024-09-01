@@ -1,0 +1,23 @@
+'ref:https://learn.microsoft.com/en-us/office/vba/api/excel.application%28object%29
+'ref:https://learn.microsoft.com/en-us/office/vba/api/excel.application.sendkeys
+
+Sub 巨集1()
+'
+' 巨集1 巨集
+'
+'^=>ctrl
+'==========sendkey in 2013 always in vba panel
+'Application.SendKeys "^a" is not eual to cells.select
+'Application.SendKeys "^a" =>select all vba code
+'Application Represents the entire Microsoft Excel application. ()
+'Application.SendKeys "^a"
+Cells(1, 1).Select
+Application.SendKeys "a"
+'====================Application
+'1.useWorksheetFunction
+'ex1:use average in worknbook
+'Range("A3").Value = Application.WorksheetFunction.Average(Range("A1:A2"))
+'ex1:use countA in worknbook
+'Range("b1").Value = Application.WorksheetFunction.CountA(Range("A:A"))
+End Sub
+

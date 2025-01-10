@@ -1,0 +1,28 @@
+Sub ChangeAllFonts()
+    Dim oSlide As Slide
+    Dim oShape As Shape
+    Dim oTextRange As TextRange
+    Dim sFontName As String
+    
+    ' 設定目標字型名稱
+    sFontName = "標楷體"
+    
+    ' 遍歷所有幻燈片
+    For Each oSlide In ActivePresentation.Slides
+        ' 遍歷幻燈片中的所有形狀
+        For Each oShape In oSlide.Shapes
+            ' 檢查形狀是否包含文字框
+            If oShape.HasTextFrame Then
+                If oShape.TextFrame.HasText Then
+                    ' 修改文字框中的字型
+                    Set oTextRange = oShape.TextFrame.TextRange
+                    oTextRange.Font.Name = sFontName
+                End If
+            End If
+        Next oShape
+    Next oSlide
+    
+    MsgBox "所有字型已更改為 " & sFontName, vbInformation
+End Sub
+
+'from felo search

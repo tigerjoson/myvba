@@ -1,0 +1,38 @@
+'from felo
+Sub AddTextboxWithSlideNumber()
+    Dim pptSlide As Slide
+    Dim pptTextbox As Shape
+    Dim slideIndex As Integer
+    Dim slideWidth As Single
+    Dim slideHeight As Single
+    Dim textboxWidth As Single
+    Dim textboxHeight As Single
+    
+    ' 設定文字方塊的寬度與高度
+    textboxWidth = 100
+    textboxHeight = 50
+    
+    ' 取得投影片的寬度與高度
+    slideWidth = ActivePresentation.PageSetup.slideWidth
+    slideHeight = ActivePresentation.PageSetup.slideHeight
+    
+    ' 遍歷每一張投影片
+    For Each pptSlide In ActivePresentation.Slides
+        slideIndex = pptSlide.slideIndex
+        
+        ' 新增文字方塊，位置設置為右下角
+        Set pptTextbox = pptSlide.Shapes.AddTextbox(Orientation:=msoTextOrientationHorizontal, Left:=slideWidth - textboxWidth - 20, Top:=slideHeight - textboxHeight - 20, Width:=textboxWidth, Height:=textboxHeight)
+        
+        ' 設定文字方塊的屬性
+        With pptTextbox
+            .TextFrame.TextRange.Text = "頁碼: " & slideIndex ' 插入頁碼
+            .Fill.ForeColor.RGB = RGB(255, 255, 255) ' 白色背景
+            .TextFrame.TextRange.Font.Color = RGB(0, 0, 0) ' 黑色文字
+            .TextFrame.TextRange.Font.Size = 14 ' 字體大小
+            .Line.ForeColor.RGB = RGB(0, 0, 0) ' 黑色邊框
+        End With
+    Next pptSlide
+    
+    MsgBox "已完成新增文字方塊與頁碼！"
+End Sub
+

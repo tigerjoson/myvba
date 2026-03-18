@@ -1,0 +1,97 @@
+Sub GetMultiAccountCalendarItems()
+    Dim oApp As Outlook.Application
+    Dim oNS As Outlook.Namespace
+    Dim oFolder As Outlook.MAPIFolder
+    Dim oAppt As Outlook.AppointmentItem
+    Dim currentMonth As Integer
+    Dim currentYear As Integer
+    Dim itemCount As Integer
+    Dim oExcel As Object
+    Dim oWB As Object
+    Dim oWS As Object
+    Dim excelRow As Integer
+    Dim calFolders As New Collection
+    
+    ' 初始化Outlook
+    Set oApp = CreateObject("Outlook.Application")
+    Set oNS = oApp.GetNamespace("MAPI")
+    
+    ' 獲取所有日曆文件夾（含線上帳戶）
+    GetAllCalendarFolders oNS.Folders, calFolders
+    
+    ' 獲取當前年月 (2026年3月)
+    currentMonth = Month(Date)
+    currentYear = Year(Date)
+    itemCount = 0
+    
+    ' 初始化Excel
+    Set oExcel = CreateObject("Excel.Application")
+    Set oWB = oExcel.Workbooks.Add
+    Set oWS = oWB.Worksheets(1)
+    oExcel.Visible = True
+    excelRow = 1
+    
+    ' 寫入Excel標題（新增"日曆來源"欄位）
+    oWS.Cells(excelRow, 1).Value = "日曆來源"
+    oWS.Cells(excelRow, 2).Value = "主題"
+    oWS.Cells(excelRow, 3).Value = "開始時間"
+    oWS.Cells(excelRow, 4).Value = "結束時間"
+    oWS.Cells(excelRow, 5).Value = "地點"
+    excelRow = excelRow + 1
+    
+    ' 遍歷所有日曆文件夾
+    For Each oFolder In calFolders
+        For Each oAppt In oFolder.Items
+            ' 檢查項目是否在當月範圍內
+            If Month(oAppt.Start) = currentMonth And Year(oAppt.Start) = currentYear Then
+                itemCount = itemCount + 1
+                
+                ' 寫入Excel（新增日曆來源名稱）
+                oWS.Cells(excelRow, 1).Value = oFolder.Name  ' 日曆來源名稱
+                oWS.Cells(excelRow, 2).Value = oAppt.Subject
+                oWS.Cells(excelRow, 3).Value = Format(oAppt.Start, "yyyy-mm-dd hh:mm")
+                oWS.Cells(excelRow, 4).Value = Format(oAppt.End, "yyyy-mm-dd hh:mm")
+                oWS.Cells(excelRow, 5).Value = oAppt.Location
+                excelRow = excelRow + 1
+            End If
+        Next oAppt
+    Next oFolder
+    
+    ' 自動調整Excel欄寬
+    oWS.Columns("A:E").AutoFit
+    
+    ' 儲存Excel檔案
+    oWB.SaveAs "D:\MultiCalendar_" & currentYear & "_" & Format(currentMonth, "00") & ".xlsx"
+    
+    ' 顯示結果
+    MsgBox "成功匯出 " & itemCount & " 個行事曆項目" & vbCrLf & _
+           "來源日曆數: " & calFolders.Count & " 個", _
+           vbInformation, "行事曆匯報"
+    
+    ' 釋放物件
+    Set oWS = Nothing
+    Set oWB = Nothing
+    Set oExcel = Nothing
+    Set oAppt = Nothing
+    Set oFolder = Nothing
+    Set oNS = Nothing
+    Set oApp = Nothing
+End Sub
+
+' 遞歸獲取所有日曆文件夾（支援子文件夾）
+Sub GetAllCalendarFolders(ByVal Folders As Folders, ByRef colFolders As Collection)
+    Dim oFolder As Outlook.MAPIFolder
+    Dim subFolder As Outlook.MAPIFolder
+    
+    For Each oFolder In Folders
+        ' 檢查是否為日曆文件夾
+        If oFolder.DefaultItemType = olAppointmentItem Then
+            colFolders.Add oFolder
+        End If
+        
+        ' 遞歸檢查子文件夾
+        If oFolder.Folders.Count > 0 Then
+            GetAllCalendarFolders oFolder.Folders, colFolders
+        End If
+    Next oFolder
+End Sub

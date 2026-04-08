@@ -1,0 +1,114 @@
+Sub GetOutlookUserInfo()
+    ' 啟用錯誤處理機制
+    On Error GoTo ErrorHandler
+    
+    ' 宣告變數（全部使用晚期綁定）
+    Dim OutlookApp As Object      ' Outlook應用程式物件
+    Dim Namespace As Object       ' MAPI命名空間
+    Dim ExcelApp As Object        ' Excel應用程式物件（新增）
+    Dim wb As Object              ' 工作簿物件
+    Dim ws As Object              ' 工作表物件
+    Dim lastRow As Long           ' 最後一列行號
+    Dim i As Long                 ' 迴圈計數器
+    Dim userID As String          ' 員工代號
+    Dim AddressEntry As Object    ' 收件人地址物件
+    Dim ExchangeUser As Object    ' Exchange使用者物件
+    
+    ' === 重點修復1：建立獨立的Excel應用程式實例 ===
+    Set ExcelApp = CreateObject("Excel.Application")
+    ExcelApp.Visible = False  ' 在後台執行
+    
+    ' === 重點修復2：檔案路徑處理 ===
+    Const filePath As String = "D:\1.xlsx"
+    Const sheetName As String = "工作表1"
+    
+    ' 檢查檔案是否存在
+    If Dir(filePath) = "" Then
+        MsgBox "錯誤：檔案不存在！" & vbCrLf & filePath, vbCritical
+        Exit Sub
+    End If
+    
+    ' 嘗試開啟檔案
+    On Error Resume Next
+    Set wb = ExcelApp.Workbooks.Open(filePath)
+    If Err.Number <> 0 Then
+        MsgBox "無法開啟檔案，錯誤原因：" & vbCrLf & _
+               "1. 檔案被其他程式鎖定" & vbCrLf & _
+               "2. 路徑權限不足" & vbCrLf & _
+               "3. 檔案格式不支援" & vbCrLf & _
+               "錯誤詳情：" & Err.Description, vbCritical
+        Exit Sub
+    End If
+    On Error GoTo ErrorHandler
+    
+    ' === 重點修復3：工作表處理 ===
+    On Error Resume Next
+    Set ws = wb.Sheets(sheetName)
+    If Err.Number <> 0 Then
+        ' 嘗試使用索引值取得工作表
+        Set ws = wb.Sheets(1)
+        If Err.Number <> 0 Then
+            MsgBox "找不到工作表！" & vbCrLf & _
+                   "請確認工作表名稱: " & sheetName, vbCritical
+            wb.Close False
+            ExcelApp.Quit
+            Exit Sub
+        End If
+    End If
+    On Error GoTo ErrorHandler
+    
+    ' === 重點修復4：建立Outlook物件（晚期綁定）===
+    Set OutlookApp = CreateObject("Outlook.Application")
+    Set Namespace = OutlookApp.GetNamespace("MAPI")
+    
+    ' 獲取A欄最後一行（使用常數替代xlUp）
+    lastRow = ws.Cells(ws.Rows.Count, 1).End(-4162).Row  ' -4162 = xlUp
+    
+    ' 主處理迴圈
+    For i = 2 To lastRow
+        userID = Trim(ws.Cells(i, 1).Value)
+        If userID <> "" Then
+            Set AddressEntry = Namespace.CreateRecipient(userID)
+            
+            ' 嘗試解析
+            If AddressEntry.Resolve Then
+                On Error Resume Next
+                Set ExchangeUser = AddressEntry.GetExchangeUser()
+                If Err.Number = 0 Then
+                    ' 寫入資料
+                    ws.Cells(i, 2).Value = ExchangeUser.Name
+                    ws.Cells(i, 3).Value = ExchangeUser.JobTitle
+                    ws.Cells(i, 4).Value = ExchangeUser.PrimarySmtpAddress
+                Else
+                    ws.Cells(i, 2).Value = "非Exchange使用者"
+                End If
+                On Error GoTo ErrorHandler
+            Else
+                ws.Cells(i, 2).Value = "解析失敗"
+            End If
+        End If
+    Next i
+    
+    ' 儲存並關閉
+    wb.Close True
+    ExcelApp.Quit
+    Set OutlookApp = Nothing
+    
+    MsgBox "員工資訊更新完成！", vbInformation
+    Exit Sub
+
+ErrorHandler:
+    ' 強化錯誤處理
+    Dim errMsg As String
+    errMsg = "錯誤代號: " & Err.Number & vbCrLf & _
+             "錯誤描述: " & Err.Description & vbCrLf & _
+             "發生位置: " & IIf(Erl <> 0, Erl, "未知")
+    
+    ' 安全釋放資源
+    On Error Resume Next
+    If Not wb Is Nothing Then wb.Close False
+    If Not ExcelApp Is Nothing Then ExcelApp.Quit
+    If Not OutlookApp Is Nothing Then Set OutlookApp = Nothing
+    
+    MsgBox "程式執行失敗！" & vbCrLf & errMsg, vbCritical
+End Sub

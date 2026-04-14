@@ -1,0 +1,40 @@
+Sub SetVideosToFullScreen()
+
+    Dim sld As Slide
+    Dim shp As Shape
+    
+    ' 遍歷所有投影片
+    For Each sld In ActivePresentation.Slides
+        
+        ' 遍歷投影片中的所有形狀
+        For Each shp In sld.Shapes
+            
+            ' 檢查形狀是否為媒體(影片/音訊)
+            If shp.Type = msoMedia Then
+                On Error Resume Next   ' 忽略可能的錯誤
+                
+                ' 在 Office 365 中，無法直接設定 FullScreen 屬性
+                ' 只能在投影片放映時呼叫 SlideShowWindow.View 來全螢幕播放
+                ' 這裡先設定影片自動播放
+                shp.MediaFormat.StartMode = ppMediaStartAutomatic
+                
+                On Error GoTo 0   ' 恢復正常錯誤處理
+            End If
+            
+        Next shp
+    Next sld
+    
+End Sub
+
+' 在簡報播放時呼叫此程序，讓影片全螢幕播放
+Sub PlayVideosFullScreen()
+    Dim ssw As SlideShowWindow
+    
+    ' 確認簡報正在播放
+    If ActivePresentation.SlideShowWindow Is Nothing Then Exit Sub
+    
+    Set ssw = ActivePresentation.SlideShowWindow
+    
+    ' 切換到全螢幕模式
+    ssw.View.FullScreen = True
+End Sub

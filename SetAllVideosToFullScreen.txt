@@ -1,0 +1,38 @@
+Sub SetAllVideosToFullScreen()
+    Dim sld As Slide
+    Dim shp As Shape
+    Dim slideWidth As Single
+    Dim slideHeight As Single
+    
+    ' 取得目前簡報投影片的完整寬度與高度
+    slideWidth = ActivePresentation.PageSetup.slideWidth
+    slideHeight = ActivePresentation.PageSetup.slideHeight
+    
+    ' 尋覽簡報中的每一張投影片
+    For Each sld In ActivePresentation.Slides
+        ' 尋覽該投影片中的每一個形狀
+        For Each shp In sld.Shapes
+            ' 檢查該形狀是否為媒體物件
+            If shp.Type = msoMedia Then
+                ' 進一步確認該媒體物件是否為影片 (排除音訊等其他媒體)
+                If shp.MediaType = ppMediaTypeMovie Then
+                    
+                    ' 取消鎖定長寬比，確保影片可以完全填滿整個螢幕
+                    shp.LockAspectRatio = msoFalse 
+                    
+                    ' 將影片的寬度與高度設定為投影片的寬度與高度
+                    shp.Width = slideWidth
+                    shp.Height = slideHeight
+                    
+                    ' 將影片的位置設定在投影片的左上角 (X=0, Y=0)
+                    shp.Left = 0
+                    shp.Top = 0
+                    
+                End If
+            End If
+        Next shp
+    Next sld
+    
+    ' 執行完畢後跳出提示視窗
+    MsgBox "所有投影片中的影片已成功設定為全螢幕大小！", vbInformation, "執行完成"
+End Sub
